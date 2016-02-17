@@ -19,7 +19,7 @@ x3_Source=mvnrnd(m3,S3,N);
 x1=P1(1)*x1_Source;
 x2=P1(2)*x2_Source;
 x3=P1(3)*x3_Source;
-figure(1);
+figure(2);
 %这里是显示的训练数据
 plot(x1_Source((1:N/2),1),x1_Source((1:N/2),2),'ro','MarkerSize',3);hold on;
 plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
@@ -61,7 +61,7 @@ end
 GoalxFor1=X1xlf(x(1),1); %最远的点的x值
 GoalyFor1=X1xlf(x(1),2); %最远的点的y值
 GoalrFor1=X1xlf(x(1),3); %最远的点的半径值
-%{
+
 plot(X1xln(1,1),X1xln(1,2),'go','MarkerSize',5);hold on;
 plot([X1xln(1,1)-sqrt(GoalrFor1),X1xln(1,1)+sqrt(GoalrFor1)],[X1xln(1,2),X1xln(1,2)],'g-');hold on;
 plot([X1xln(1,1),X1xln(1,1)],[X1xln(1,2)-sqrt(GoalrFor1),X1xln(1,2)+sqrt(GoalrFor1)],'g-');hold on;
@@ -72,7 +72,7 @@ for n=1:1:360
     CircleY=X1xln(1,2)+sqrt(GoalrFor1)*sin(n*rd);
     plot(CircleX,CircleY,'g.','MarkerSize',0.5);hold on;
 end
-%}
+
 %圆圈内的训练点
 NeedClassify=xRemind(2:length(xRemind));
 %{
