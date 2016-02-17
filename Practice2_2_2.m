@@ -54,6 +54,7 @@ for m=1:length(X1xln)
     X1xlf=[X1xlf(:,1),X1xlf(:,2)];
     %计算距离--采用最原始的方案，计算所有的点与星号位置的距离
     for n=1:(N/2*3)
+        %dm_EuclidSource(n)=X1xln(m,:)*S1^(-1)*(X1xlf(n,:))';
         dm_EuclidSource(n)=(X1xln(m,1)-X1xlf(n,1))^2+(X1xln(m,2)-X1xlf(n,2))^2; %计算欧几里得距离
     end
     X1xlf=[X1xlf,dm_EuclidSource'];
