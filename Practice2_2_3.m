@@ -44,6 +44,7 @@ X1xlf=[x1(1:(N/2),:);x2(1:(N/2),:);x3(1:(N/2),:)];
     进行求决策面的方式
     2.由于是采用的最近邻规则，所以对于原数据集要进行一定的截取（毕竟不能一开始就已经分好，然后再去分类）
     3.用于作为训练的数据集只取原数据集的1/2
+    4.Mahalanobis距离是判断距离最远的才是这个类中的
 %}
 %初始化存储位置
 dm_EuclidSource=1:(N/2*3);
@@ -54,7 +55,7 @@ for m=1:length(X1xln)
     X1xlf=[X1xlf(:,1),X1xlf(:,2)];
     %计算距离--采用最原始的方案，计算所有的点与星号位置的距离
     for n=1:(N/2*3)
-        dm_EuclidSource(n)=(X1xln(m,:)-X1xlf(n,:))*S1^(-1)*(X1xlf(n,:)-X1xlf(n,:))';
+        dm_EuclidSource(n)=(X1xln(m,:)-X1xlf(n,:))*S1^(-1)*(X1xln(n,:)-X1xlf(n,:))';
         %dm_EuclidSource(n)=(X1xln(m,1)-X1xlf(n,1))^2+(X1xln(m,2)-X1xlf(n,2))^2; %计算欧几里得距离
     end
     X1xlf=[X1xlf,dm_EuclidSource'];
@@ -106,7 +107,7 @@ for m=1:length(X1xln)
     plot(X1xln(m,1),X1xln(m,2),'go','MarkerSize',5);hold on;
     %--------------------------------------------
     Goalr=[GoalrFor1,GoalrFor2,GoalrFor3];
-    Number=find(Goalr==min(Goalr));
+    Number=find(Goalr==max(Goalr));
     if Number==1
         plot(X1xln(m,1),X1xln(m,2),'r+','MarkerSize',3);hold on;
     elseif Number==2
