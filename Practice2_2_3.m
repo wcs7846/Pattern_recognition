@@ -37,7 +37,7 @@ plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
 plot(x3_Source((1:N/2),1),x3_Source((1:N/2),2),'ko','MarkerSize',3);hold on;
 X1xlf=[x1(1:(N/2),:);x2(1:(N/2),:);x3(1:(N/2),:)];
 %---------------------------------------------------------------------------------------------------------
-%(b)马氏距离
+%(b)Mahalanobis距离
 %{
     说明：
     1.由于这个是采用最近邻规则进行判断的所以可以考虑直接对未知数据集同时分类到3个类中而不是像之前的采用两两函数集
@@ -63,7 +63,7 @@ for m=1:length(X1xln)
     dm_Euclid3=dm_EuclidSource((N+1):(N*1.5));
     %由于懒的缘故，此处本可以写成for循环但是考虑到就只有3个类，所以懒得写成循环了233333333
     %--------------------------------------------
-    %1号类的欧几里得距离
+    %1号类的Mahalanobis距离
     kRemind=k;
     xRemind=0;%因为不是很好给xRemind定界所以暂时先这样处理--这个可以优化(虽然觉得意义不是很大，毕竟维数不会很高)
     while kRemind>0
@@ -77,7 +77,7 @@ for m=1:length(X1xln)
     %GoalyFor1=X1xlf(x(1),2); %最远的点的y值
     GoalrFor1=X1xlf(x(1),3); %最远的点的半径值
     %--------------------------------------------
-    %2号类的欧几里得距离
+    %2号类的Mahalanobis距离
     kRemind=k;
     xRemind=0;
     while kRemind>0
@@ -90,7 +90,7 @@ for m=1:length(X1xln)
     %GoalyFor2=X1xlf(x(1)+N/2,2); %最远的点的y值
     GoalrFor2=X1xlf(x(1)+N/2,3); %最远的点的半径值
     %--------------------------------------------
-    %3号类的欧几里得距离
+    %3号类的Mahalanobis距离
     kRemind=k;
     xRemind=0;
     while kRemind>0
