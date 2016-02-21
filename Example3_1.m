@@ -70,9 +70,24 @@ for n=1:length(FalseX2)-1
 end
 %---------------------------------------------------------------------------------------------------------
 %感知器算法
-Ro=0.7;
+%计算系数siertax
+%创建存储位置
+SWx1=size(Wx1);
+SWx2=size(Wx2);
+siertax=[-ones(1,SWx1(1)),ones(1,SWx2(1))];
+%初始化基本参数
+Ro=0.05;
 Rot=Ro;
-wNext=w0'-Ro*(-1)*(Wx1(1,:)'+Wx1(2,:)'+Wx1(3,:)'+Wx1(4,:)')-Ro*(+1)*(Wx2(1,:)'+Wx2(2,:)'+Wx2(3,:)');
+SumWx=zeros(3,1);
+%
+for n=1:(SWx1(1)+SWx2(1)-1)
+    if n<=SWx1(1)
+        SumWx=SumWx+siertax(n)*Wx1(n,:)';
+    else
+        SumWx=SumWx+siertax(n)*Wx2((n-SWx1(1)+1),:)';
+    end
+end
+wNext=w0'-Ro*SumWx;
 %重新画一下直线
 for n=1:1:length(n1)
     n2(n)=(-wNext(1)*n1(n)-wNext(3))/wNext(2);
