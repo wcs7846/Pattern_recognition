@@ -4,8 +4,8 @@ close all;
 %这个是练习3.1的实例程序
 randn('seed',0);
 P1=[1  1];
-m1=[1  8]';
-m2=[14 9]';
+m1=[1 14]';
+m2=[14 1]';
 sita=sqrt(4);
 S1=(sita^2)*eye(2);
 S2=S1;
@@ -44,6 +44,58 @@ for n=1:1:length(n1)
 end
 plot(n1,n2,'g.','MarkerSize',3);hold on;
 %---------------------------------------------------------------------------------------------------------
+%感知器算法
+%权向量的形式为：ax1+bx2+c=0<---->w=[a,b,c]'
+%计算系数siertax
+ww1=[x1,ones(size(x1,1),1)]; 
+ww2=[x2,ones(size(x2,1),1)]; 
+X=[ww1;-ww2];
+W=w0';
+%W=ones(size(X,2),1);
+ok=0;
+%初始化基本参数
+Ro=0.05;
+Rot=Ro;
+k=1;%这个数是用来调试的
+%循环体
+while(ok==0)
+    for n=1:size(X,1)
+        if (W'*X(n,:)'<0) 
+            k=k+1;
+            W=W+X(n,:)';
+            break;
+        else
+            if (n==size(X,1)) 
+                ok=1;
+            end
+        end
+    end
+end
+%重新画一下直线
+%n1=X1xlf(:,1)';
+n2=-W(1)*n1/W(2)-W(3)/W(2); 
+plot(n1,n2,'m.','MarkerSize',3);hold on;
+%---------------------------------------------------------------------------------------------------------
+%利用权向量进行分类
+nfx1=X1xln(:,1)';
+nfx2=X1xln(:,2)';
+for n=1:1:length(nfx1)
+    if m1(2)>m2(2)
+        if nfx2(n)>n2(n)
+            plot(nfx1(n),nfx2(n),'r+','MarkerSize',3);hold on;
+        else
+            plot(nfx1(n),nfx2(n),'b+','MarkerSize',3);hold on;
+        end
+    else
+        if nfx2(n)<n2(n)
+            plot(nfx1(n),nfx2(n),'r+','MarkerSize',3);hold on;
+        else
+            plot(nfx1(n),nfx2(n),'b+','MarkerSize',3);hold on;
+        end
+    end
+end
+%---------------------------------------------------------------------------------------------------------
+%{
 %判断权向量是否为正确分类
 FalseX1=0;
 for n=1:1:length(n1)/2
@@ -68,28 +120,5 @@ Wx2=ones(length(FalseX2)-1,3);
 for n=1:length(FalseX2)-1
     Wx2(n,1:2)=X1xlf(FalseX2(n+1),:);
 end
+%}
 %---------------------------------------------------------------------------------------------------------
-%感知器算法
-%计算系数siertax
-%创建存储位置
-SWx1=size(Wx1);
-SWx2=size(Wx2);
-siertax=[-ones(1,SWx1(1)),ones(1,SWx2(1))];
-%初始化基本参数
-Ro=0.05;
-Rot=Ro;
-SumWx=zeros(3,1);
-%
-for n=1:(SWx1(1)+SWx2(1)-1)
-    if n<=SWx1(1)
-        SumWx=SumWx+siertax(n)*Wx1(n,:)';
-    else
-        SumWx=SumWx+siertax(n)*Wx2((n-SWx1(1)+1),:)';
-    end
-end
-wNext=w0'-Ro*SumWx;
-%重新画一下直线
-for n=1:1:length(n1)
-    n2(n)=(-wNext(1)*n1(n)-wNext(3))/wNext(2);
-end
-plot(n1,n2,'m.','MarkerSize',3);hold on;
