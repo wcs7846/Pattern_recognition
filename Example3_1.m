@@ -2,6 +2,9 @@ clc;
 clear;
 close all;
 %这个是练习3.1的实例程序
+%------ 这个算法是改进版的感知器算法，以下为一些重要的说明：
+%       1.这个算法只能用在可以线性可分的分类问题中
+%       2.这个算法会无限次循环下去，直到找到一个可以完全分类的权向量
 randn('seed',0);
 P1=[1  1];
 m1=[1 14]';
@@ -95,30 +98,4 @@ for n=1:1:length(nfx1)
     end
 end
 %---------------------------------------------------------------------------------------------------------
-%{
-%判断权向量是否为正确分类
-FalseX1=0;
-for n=1:1:length(n1)/2
-    if X1xlf(n,2)>n2(n)
-        FalseX1=[FalseX1,n];
-        plot(X1xlf(n,1),X1xlf(n,2),'mo','MarkerSize',5);
-    end
-end
-FalseX2=0;
-for n=length(n1)/2+1:1:length(n1)
-    if X1xlf(n,2)<n2(n)
-        FalseX2=[FalseX2,n];
-        plot(X1xlf(n,1),X1xlf(n,2),'mo','MarkerSize',5);
-    end
-end
-%整理一下出错的数据
-Wx1=ones(length(FalseX1)-1,3);
-for n=1:length(FalseX1)-1
-    Wx1(n,1:2)=X1xlf(FalseX1(n+1),:);
-end
-Wx2=ones(length(FalseX2)-1,3);
-for n=1:length(FalseX2)-1
-    Wx2(n,1:2)=X1xlf(FalseX2(n+1),:);
-end
-%}
-%---------------------------------------------------------------------------------------------------------
+
