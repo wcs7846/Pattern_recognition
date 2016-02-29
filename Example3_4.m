@@ -32,8 +32,8 @@ X1xln=[x1((N/2)+1:N,:);x2((N/2)+1:N,:)];
 figure(2);
 plot(x1_Source((1:N/2),1),x1_Source((1:N/2),2),'ro','MarkerSize',3);hold on;
 plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
-plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'mo','MarkerSize',5);hold on;
-plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'mo','MarkerSize',5);hold on;
+plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
+plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
 %---------------------------------------------------------------------------------------------------------
 %{
 %原始测试数据集---最开始用的数据(不打算删掉这个了留做纪念算了.....)
