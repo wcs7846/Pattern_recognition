@@ -2,62 +2,80 @@ clc
 close all
 clear
 %------------------------------------------------------------------------------------------
-randn('seed',0);
-P1=[1  1];
-m1=[1  8]';
-m2=[14 9]';
-sita=sqrt(4);
-S1=(sita^2)*eye(2);
-S2=S1;
-N=1000;
-x1_Source=mvnrnd(m1,S1,N);
-x2_Source=mvnrnd(m2,S2,N);
-x1=P1(1)*x1_Source;
-x2=P1(2)*x2_Source;
-figure(1);
-%这里是显示的训练数据
-plot(x1_Source((1:N/2),1),x1_Source((1:N/2),2),'ro','MarkerSize',3);hold on;
-plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
-X1xlf=[x1(1:(N/2),:);x2(1:(N/2),:)];
-%这里是显示的未训练数据
-plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'mo','MarkerSize',3);hold on;
-plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'mo','MarkerSize',3);hold on;
-X1xln=[x1((N/2)+1:N,:);x2((N/2)+1:N,:)];
-%在第二个图中显示
-figure(2);
-plot(x1_Source((1:N/2),1),x1_Source((1:N/2),2),'ro','MarkerSize',3);hold on;
-plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
-%---------------------------------------------------------------------------------------------------------
-%w1=[0.1 6.8 -3.5 2.0 4.1 3.1 -0.8 0.9 5.0 3.9; 1.1 7.1 -4.1 2.7 2.8 5.0 -1.3 1.2 6.4 4.0]; 
-%w2=[7.1 -1.4 4.5 6.3 4.2 1.4 2.4 2.5 8.4 4.1;4.2 -4.3 0.0 1.6 1.9 -3.2 -4.0 -6.1 3.7 -2.2]; 
-%normalized 
-x1=x1';
-x2=x2';
-ww1=[ones(1,size(x1,2)); x1]; 
-ww2=[ones(1,size(x2,2)); x2]; 
-X=[ww1 -ww2];
-%initializtion of W&k
-k=1;
-W=ones(size(X,1),1);
-ok=0;
-%循环体设计
-while(ok==0)
-        for i=1:size(X,2)
-        if (W'*X(:,i)<0) 
-            k=k+1;
-            W=W+X(:,i);
-            break;
+
+g=100;           %仿真统计次数
+N=1024;          %输入信号的序列长度
+k=128;           %FIR滤波器长度
+pp=zeros(g,N-k);   %将每次循环仿真的误差信号结果存于矩阵PP中，以便求取统计平均。
+u=1/256;          %步长因子设为1/256
+snr=[3 -3];         %存放输入信号信噪比参数
+%生成正弦信号序列
+t=1:N;
+s=sin(0.5*pi*t);  %生成正弦波信号
+xn=zeros(1,N);   %存放输入信号
+y=zeros(1,N);    %存放输出信号
+w=zeros(1,k);    %存放权值信号
+e=zeros(1,N);    %存放误差信号
+for type=1:4
+    for q=1:g
+        noise=rand(1,length(s));
+        if type==1
+           SNR=snr(1);d=s;
+        elseif type==2
+           SNR=snr(1); d=s;
+        elseif type==3
+           SNR=snr(2); d=sqrt(10^(-SNR/10))*noise;
         else
-            if (i==size(X,2)) ok=1;
-            end
+           SNR=snr(2); d=sqrt(10^(-SNR/10))*noise;
+        end           
+        xn=sqrt(10^(-SNR/10))*noise+s;
+        y(1:k)=xn(1:k);
+        %LMS算法
+        for i=(k+1):N
+            XN=xn((i-k+1):(i));
+            y(i)=w*XN';
+            e(i)=d(i)-y(i);
+            w=w+u*e(i)'*XN;
         end
+        pp(q,:)=(e(k+1:N)).^2;%求每次仿真后误差信号的平方值
+    end
+    figure(1);
+    subplot(311);
+    plot(s(300:450));  %截取信号的一段进行绘图
+    title('信号S时域波形');
+    if type==1
+        subplot(312); plot(xn(300:450));
+        title('信号s加噪声后的时域波形(snr=3dB)');
+    elseif type==3
+        subplot(313); plot(xn(300:450));
+        title('信号s加噪声后的时域波形(snr=-3dB)');
+    end
+    %求取各次循环仿真的误差统计均值，完成Monte Carlo仿真
+    for b=1:N-k
+        bi(b)=sum(pp(:,b))/g;
+    end
+    %绘制自适应滤波后的输出信号
+    figure(2)
+    if type==1
+        subplot(311);
+        plot(y(300:450));title('自适应滤波后的输出时域信号(snr=3dB,期望信号为正弦信号)');
+    elseif type==2
+        subplot(312);
+        plot(y(300:450));title('自适应滤波后的输出时域信号(snr=3dB,期望信号为正弦信号)');
+    elseif type==4
+        subplot(313);y=xn-y;%由于期望信号为噪声信号，系统相当于干扰抵消系统
+        plot(y(300:450));title('自适应滤波后的输出时域信号(snr=-3dB,期望信号为噪声信号)');
+    end
+    %绘制误差信号图
+    figure(3)
+    if type==1
+        subplot(311);
+        plot(bi(1:100));title('误差均方信号(snr=3dB,期望信号为正弦信号)');
+    elseif type==2
+        subplot(312);
+        plot(bi(1:100));title('误差均方信号(snr=3dB,期望信号为正弦信号)');
+    elseif type==3
+        subplot(313);
+        plot(bi(1:100));title('误差均方信号(snr=-3dB,期望信号为噪声信号)');
     end
 end
-%图示
-xmin=min(min(x1(1,:)),min(x2(1,:))); 
-xmax=max(max(x1(1,:)),max(x2(1,:))); 
-ymin=min(min(x1(2,:)),min(x2(2,:))); 
-ymax=max(max(x1(2,:)),max(x2(2,:))); 
-xindex=xmin-1:(xmax-xmin)/100:xmax+1; 
-yindex=-W(2)*xindex/W(3)-W(1)/W(3); 
-figure(1);plot(xindex,yindex)%分类面
