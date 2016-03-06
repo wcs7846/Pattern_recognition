@@ -55,7 +55,7 @@ plot(n1,n2,'g.','MarkerSize',3);hold on;
 %设定误差灵敏度为1
 %初始化
 W=w0;
-Sigema=1;
+Sigema=0.0001;
 ok=0;
 Ro=1:length(X1xlf);
 for n=1:length(Ro)
@@ -69,12 +69,12 @@ XiuFuZ=zeros(length(Y1xlf),3);
 while(ok==0)
     for n=1:length(X1xlf)
         temp = Ro(n)*X1xlfC(n,:)*(Y1xlf(n)-X1xlfC(n,:)'*W);
-        %{
-        if abs(temp)<Sigema
-            ok=1;
-            break;
-        end
-        %}
+        
+%         if abs(temp)<Sigema
+%             ok=1;
+%             break;
+%         end
+        
         XiuZhenZ(n,:)=temp;
         W=W+temp;
         XiuFuZ(n,:)=W;
