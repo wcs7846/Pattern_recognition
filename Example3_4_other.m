@@ -54,12 +54,12 @@ plot(n1,n2,'g.','MarkerSize',3);hold on;
 %采用的Ro(k)=1/k;
 %设定误差灵敏度为1
 %初始化
-W=w0;
-Sigema=0.0001;
+W=w0';
+Sigema=0.00001;
 ok=0;
 Ro=1:length(X1xlf);
 for n=1:length(Ro)
-    Ro(n)=1/n;
+    Ro(n)=1/(n^4);
 end
 Y1xlf=[ones(N/2,1);-ones(N/2,1)];%期望输出
 X1xlfC=[X1xlf,ones(length(X1xlf),1)];
@@ -68,18 +68,18 @@ XiuZhenZ=zeros(length(Y1xlf),3);
 XiuFuZ=zeros(length(Y1xlf),3);
 while(ok==0)
     for n=1:length(X1xlf)
-        temp = Ro(n)*X1xlfC(n,:)*(Y1xlf(n)-X1xlfC(n,:)'*W);
+        temp = Ro(n)*X1xlfC(n,:)*(Y1xlf(n)-X1xlfC(n,:)'*W');
         
-%         if abs(temp)<Sigema
-%             ok=1;
-%             break;
-%         end
+         if abs(temp)<Sigema
+             ok=1;
+             break;
+         end
         
         XiuZhenZ(n,:)=temp;
-        W=W+temp;
+        W=W+temp';
         XiuFuZ(n,:)=W;
     end
-    ok=1;
+%    ok=1;
 end
 %重新画一下直线
 n2=-W(1)*n1/W(2)-W(3)/W(2); 
@@ -105,4 +105,5 @@ for n=1:1:length(nfx1)
     end
 end
 %}
+
 %---------------------------------------------------------------------------------------------------------
