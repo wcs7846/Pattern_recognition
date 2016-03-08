@@ -9,8 +9,8 @@ close all;
 %产生数据集
 randn('seed',0);
 P1=[1  1];
-m1=[1 14]';
-m2=[14 1]';
+m1=[1 8]';
+m2=[8 1]';
 sita=sqrt(4);
 S1=(sita^2)*eye(2);
 S2=S1;
