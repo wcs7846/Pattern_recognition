@@ -69,3 +69,28 @@ for n=1:1:length(n1)
 end
 plot(n1,n2,'k.','MarkerSize',3);hold on;
 %---------------------------------------------------------------------------------------------------------
+%判断两个类的相对位置----以便后续的分类（只要是为了方便在画点的时候好涂颜色.......）
+x1F=X1xlf(1:(N/2),:);
+x2F=X1xlf((N/2+1:N),:);
+yPx1=sum(x1F(:,2))/length(x1F(:,2));
+yPx2=sum(x2F(:,2))/length(x2F(:,2));
+%进行分类操作
+n1=X1xln(:,1);
+n2=X1xln(:,2);
+for n=1:1:length(n1)
+    temp=(-w(1)*n1(n)-b)/w(2);
+    if (yPx1>yPx2)
+        if n2(n)<temp
+            plot(n1(n),n2(n),'b+','MarkerSize',3);hold on;
+        else
+            plot(n1(n),n2(n),'r+','MarkerSize',3);hold on;
+        end
+    elseif (yPx1<yPx2)
+        if n2(n)<temp
+            plot(n1(n),n2(n),'r+','MarkerSize',3);hold on;
+        else
+            plot(n1(n),n2(n),'b+','MarkerSize',3);hold on;
+        end     
+    end
+end
+%---------------------------------------------------------------------------------------------------------
