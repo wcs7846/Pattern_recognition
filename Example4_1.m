@@ -9,6 +9,7 @@ close all;
 %   ---1.数据集不再是只有一个简单的高斯分布的点，会变得比以前复杂
 %   ---2.数据集的数据不再是线性可分的，必然是非线性的，所以之前的线性分类器不能直接使用了
 %   ---3.数据集总共还是1000个点，并且只有2个类
+%   ---4.为了显示起来方便，所以现在每个样本的维数为2.因为2维比较好画图
 randn('seed',0);
 P1=[1  1];
 m1=[0.4 0.9;
@@ -46,8 +47,11 @@ x1=P1(1)*x1_Source;
 x2=P1(2)*x2_Source;
 figure(1);
 %这里是显示的训练数据
-plot(X1xlf(1:(floor(N/length(m1)))/2,1),X1xlf(1:(floor(N/length(m1)))/2,2),'ro','MarkerSize',3);hold on;
-plot(X1xlf((floor(N/length(m1)))/2+1:floor(N/length(m1)),1),X1xlf((floor(N/length(m1)))/2+1:floor(N/length(m1)),2),'bo','MarkerSize',3);hold on;
+plot(X1xlf(1:(length(X1xlf))/2,1),X1xlf(1:(length(X1xlf))/2,2),'ro','MarkerSize',3);hold on;
+plot(X1xlf((length(X1xlf))/2+1:length(X1xlf),1),X1xlf((length(X1xlf))/2+1:length(X1xlf),2),'bo','MarkerSize',3);hold on;
+%这里是显示的未训练数据
+plot(X1xln(1:(length(X1xlf))/2,1),X1xln(1:(length(X1xlf))/2,2),'mo','MarkerSize',3);hold on;
+plot(X1xln((length(X1xlf))/2+1:length(X1xlf),1),X1xln((length(X1xlf))/2+1:length(X1xlf),2),'mo','MarkerSize',3);hold on;
 %---------------------------------------------------------------------------------------------------------
 %神经网络的结构说明：
 %   ---1.采“用输入层-隐含层-输出层”的结构
@@ -63,7 +67,38 @@ plot(X1xlf((floor(N/length(m1)))/2+1:floor(N/length(m1)),1),X1xlf((floor(N/lengt
 %                 W
 %-------------------
 %权值初始化---使用均值分布在[0,1]的数
+innum = 2;  %
+midnum = 2; %
+outnum = 2; %
+alefa = 1;  %激活函数中的参数
+xierta=0.1;
+%构建矩阵---在MATLAB里面有的可能不需要
+d=[ones(length(X1xlf)/2,1) ,zeros(length(X1xlf)/2,1) ;
+   zeros(length(X1xlf)/2,1),ones(length(X1xlf)/2,1) ];
+J=0;%这个是代价函数
+%y=rand(midnum,1);
+%o=rand(outnum,1);
+%填充数值
+w1=rand(innum,midnum);
+bw1=rand(midnum,1); %这个是阈值，如果不定义这个的话，需要扩展y的值
+v1=rand(midnum,outnum);
+bv1=rand(outnum,1); %同样为阈值
+%-----前向计算--------
+%隐层计算
+ytemp=X1xlf(1,:)*w1+bw1';
+y=1./(1+exp(-alefa*ytemp'));%注：这里需要./因为是所有的数都要取倒数---同时此处就是激活函数
+%输出层计算
+o=(y')*v1+bv1';
+%o=1./(1+exp(-alefa*otemp'));%注：同样需要激活
+%误差计算
+e=d(1,:)-o;
+J=J+sum(e);
+%-----后向计算--------
+%计算权值变化值
+dv1=e'.*y;%这个暂时没有弄懂是一个矩阵还是一个数，但我认为应该是一个矩阵 
+dbv1=e;
 
+fx=alefa*(y.*(1-y));
 
-
-
+dw1=fx*X1xlf(1,:)
+dbw1=
