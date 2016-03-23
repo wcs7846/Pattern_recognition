@@ -100,5 +100,5 @@ dbv1=e;
 
 fx=alefa*(y.*(1-y));
 
-dw1=fx*X1xlf(1,:)
-dbw1=
+%dw1=fx*X1xlf(1,:)
+%dbw1=
