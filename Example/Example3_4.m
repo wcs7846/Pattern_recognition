@@ -9,8 +9,8 @@ close all;
 %产生数据集
 randn('seed',0);
 P1=[1  1];
-m1=[1 8]';
-m2=[8 1]';
+m1=[16 16]';
+m2=[7 1]';
 sita=sqrt(4);
 S1=(sita^2)*eye(2);
 S2=S1;
@@ -28,12 +28,14 @@ X1xlf=[x1(1:(N/2),:);x2(1:(N/2),:)];
 plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'mo','MarkerSize',3);hold on;
 plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'mo','MarkerSize',3);hold on;
 X1xln=[x1((N/2)+1:N,:);x2((N/2)+1:N,:)];
+title('原始数据');
 %在第二个图中显示
 figure(2);
 plot(x1_Source((1:N/2),1),x1_Source((1:N/2),2),'ro','MarkerSize',3);hold on;
 plot(x2_Source((1:N/2),1),x2_Source((1:N/2),2),'bo','MarkerSize',3);hold on;
-plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
-plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
+%plot(x1_Source(((N/2)+1:N),1),x1_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
+%plot(x2_Source(((N/2)+1:N),1),x2_Source(((N/2)+1:N),2),'go','MarkerSize',5);hold on;
+title('已分类数据');
 %---------------------------------------------------------------------------------------------------------
 %{
 %原始测试数据集---最开始用的数据(不打算删掉这个了留做纪念算了.....)
