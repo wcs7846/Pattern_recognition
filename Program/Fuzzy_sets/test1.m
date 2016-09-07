@@ -29,21 +29,32 @@ title('均衡化后直方图');
 %----IF一个像素是灰的，THEN使它仍是灰的
 %----IF一个像素是亮的，THEN使它较亮
 %--------------------------------
-%   先计算3条隶属度函数
+%   先计算3条隶属度函数--并且画出来
 %   已经测试完毕了
 z0=0:1:255;
+point_Dark=[4 , 1;
+         34, 0;];
+point_Gray=[4 , 0;
+         34, 1;
+         64, 0;];
+point_Bright=[34, 0;
+         64, 1;];
+parameter_Dark=Membership_Degree_Parameter(point_Dark);
+parameter_Gray=Membership_Degree_Parameter(point_Gray);
+parameter_Bright=Membership_Degree_Parameter(point_Bright);
 y_dark=0:1:255;
 y_gray=0:1:255;
 y_bright=0:1:255;
 for n=1:256
-    y_dark(n)=u_dark(z0(n));
-    y_gray(n)=u_gray(z0(n));
-    y_bright(n)=u_bright(z0(n));
+    y_dark(n)=PiecewiseFunction(z0(n),parameter_Dark,point_Dark);
+    y_gray(n)=PiecewiseFunction(z0(n),parameter_Gray,point_Gray);
+    y_bright(n)=PiecewiseFunction(z0(n),parameter_Bright,point_Bright);
 end
 figure(5);
 plot(z0,y_dark,'-b');hold on;
 plot(z0,y_gray,'-r');hold on;
 plot(z0,y_bright,'-k');hold on;
+title('隶属函数');
 xlim([0,256]);
 %-------------------------------
 %设置输出单一值
@@ -55,9 +66,9 @@ v_bright=255;
 dstO=zeros(row,col);
 for nx=1:row
     for ny=1:col
-        temp_d=u_dark(double(dst(nx,ny)));
-        temp_g=u_gray(double(dst(nx,ny)));
-        temp_b=u_bright(double(dst(nx,ny)));
+        temp_d=PiecewiseFunction(double(dst(nx,ny)),parameter_Dark,point_Dark);
+        temp_g=PiecewiseFunction(double(dst(nx,ny)),parameter_Gray,point_Gray);
+        temp_b=PiecewiseFunction(double(dst(nx,ny)),parameter_Bright,point_Bright);
         dstO(nx,ny)=(temp_d*v_dark+temp_g*v_gray+temp_b*v_bright)/(temp_d+temp_g+temp_b);
     end
 end
